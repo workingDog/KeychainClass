@@ -26,12 +26,12 @@ class KeychainInterface {
     //------ convenience for api ---------------------------------
     
     static func getKey() -> String? {
-        KeychainInterface.getPassword()
+        getPassword()
     }
     
     static func setKey(key: String) {
         do {
-            try KeychainInterface.savePassword(key)
+            try savePassword(key)
         } catch {
             print("setKey(): \(error)")
         }
@@ -39,7 +39,7 @@ class KeychainInterface {
     
     static func updateKey(key: String) {
         do {
-            try KeychainInterface.updatePassword(with: key)
+            try updatePassword(with: key)
         } catch {
             print("updateKey(): \(error)")
         }
@@ -48,16 +48,12 @@ class KeychainInterface {
     //-----------------------------------------------------------
     
     static func savePassword(_ password: String) throws {
-        try KeychainInterface.save(password: password.data(using: .utf8)!,
-                                   service: service,
-                                   account: account)
+        try save(password: password.data(using: .utf8)!, service: service, account: account)
     }
     
     static func getPassword() -> String? {
         do {
-            let data = try KeychainInterface.readPassword(
-                service: service,
-                account: account)
+            let data = try readPassword(service: service, account: account)
             let str = String(data: data, encoding: .utf8)
             return str
         } catch {
@@ -67,9 +63,7 @@ class KeychainInterface {
     
     static func updatePassword(with password: String) throws {
         let data = password.data(using: .utf8)!
-        try KeychainInterface.update(password: data,
-                                     service: service,
-                                     account: account)
+        try update(password: data, service: service, account: account)
     }
     
     static func save(password: Data, service: String, account: String) throws {
