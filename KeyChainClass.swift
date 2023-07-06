@@ -1,6 +1,5 @@
 import Foundation
 
-
 // based on: https://www.advancedswift.com/secure-private-data-keychain-swift/
 
 class KeychainInterface {
@@ -68,15 +67,15 @@ class KeychainInterface {
     
     static func save(password: Data, service: String, account: String) throws {
         
-        let query: [String: AnyObject] = [
+        let query: [CFString: Any] = [
             // kSecAttrService,  kSecAttrAccount, and kSecClass
             // uniquely identify the item to save in Keychain
-            kSecAttrService as String: service as AnyObject,
-            kSecAttrAccount as String: account as AnyObject,
-            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrService: service,
+            kSecAttrAccount: account,
+            kSecClass: kSecClassGenericPassword,
             
             // kSecValueData is the item value to save
-            kSecValueData as String: password as AnyObject
+            kSecValueData: password
         ]
         
         // SecItemAdd attempts to add the item identified by
@@ -99,18 +98,18 @@ class KeychainInterface {
     }
     
     static func update(password: Data, service: String, account: String) throws {
-        let query: [String: AnyObject] = [
+        let query: [CFString: Any] = [
             // kSecAttrService,  kSecAttrAccount, and kSecClass
             // uniquely identify the item to update in Keychain
-            kSecAttrService as String: service as AnyObject,
-            kSecAttrAccount as String: account as AnyObject,
-            kSecClass as String: kSecClassGenericPassword
+            kSecAttrService: service,
+            kSecAttrAccount: account,
+            kSecClass: kSecClassGenericPassword
         ]
         
         // attributes is passed to SecItemUpdate with
         // kSecValueData as the updated item value
-        let attributes: [String: AnyObject] = [
-            kSecValueData as String: password as AnyObject
+        let attributes: [CFString: Any] = [
+            kSecValueData: password
         ]
         
         // SecItemUpdate attempts to update the item identified
@@ -133,20 +132,20 @@ class KeychainInterface {
     }
     
     static func readPassword(service: String, account: String) throws -> Data {
-        let query: [String: AnyObject] = [
+        let query: [CFString: Any] = [
             // kSecAttrService,  kSecAttrAccount, and kSecClass
             // uniquely identify the item to read in Keychain
-            kSecAttrService as String: service as AnyObject,
-            kSecAttrAccount as String: account as AnyObject,
-            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrService: service,
+            kSecAttrAccount: account,
+            kSecClass: kSecClassGenericPassword,
             
             // kSecMatchLimitOne indicates keychain should read
             // only the most recent item matching this query
-            kSecMatchLimit as String: kSecMatchLimitOne,
+            kSecMatchLimit: kSecMatchLimitOne,
             
             // kSecReturnData is set to kCFBooleanTrue in order
             // to retrieve the data for the item
-            kSecReturnData as String: kCFBooleanTrue
+            kSecReturnData: kCFBooleanTrue ?? "true"
         ]
         
         // SecItemCopyMatching will attempt to copy the item
@@ -179,12 +178,12 @@ class KeychainInterface {
     }
     
     static func deletePassword(service: String, account: String) throws {
-        let query: [String: AnyObject] = [
+        let query: [CFString: Any] = [
             // kSecAttrService,  kSecAttrAccount, and kSecClass
             // uniquely identify the item to delete in Keychain
-            kSecAttrService as String: service as AnyObject,
-            kSecAttrAccount as String: account as AnyObject,
-            kSecClass as String: kSecClassGenericPassword
+            kSecAttrService: service,
+            kSecAttrAccount: account,
+            kSecClass: kSecClassGenericPassword
         ]
         
         // SecItemDelete attempts to perform a delete operation
