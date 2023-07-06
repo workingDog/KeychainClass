@@ -17,3 +17,9 @@ Usage:
           }
       }
 
+Note, make sure you have set your App.entitlements that includes:
+
+      <key>keychain-access-groups</key>
+      <array>
+          <string>$(AppIdentifierPrefix)test.com.test</string>
+      </array>
