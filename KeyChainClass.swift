@@ -1,27 +1,15 @@
 import Foundation
 
+
 // based on: https://www.advancedswift.com/secure-private-data-keychain-swift/
 
 class KeychainInterface {
     
+    // set these with your own values
     static var service = "test.com.test"
     static var account = "test.com.apikey"
     
-    enum KeychainError: Error {
-        // Attempted read for an item that does not exist.
-        case itemNotFound
-        
-        // Attempted save to override an existing item.
-        // Use update instead of save to update existing items
-        case duplicateItem
-        
-        // A read of an item in any format other than Data
-        case invalidItemFormat
-        
-        // Any operation result status than errSecSuccess
-        case unexpectedStatus(OSStatus)
-    }
-    
+
     //------ convenience for api ---------------------------------
     
     static func getKey() -> String? {
@@ -44,7 +32,15 @@ class KeychainInterface {
         }
     }
     
-    //-----------------------------------------------------------
+    static func deleteKey() {
+        do {
+            try deletePassword()
+        } catch {
+            print("deleteKey: \(error)")
+        }
+    }
+
+    //------ convenience for password ----------------------------
     
     static func savePassword(_ password: String) throws {
         try save(password: password.data(using: .utf8)!, service: service, account: account)
@@ -64,6 +60,12 @@ class KeychainInterface {
         let data = password.data(using: .utf8)!
         try update(password: data, service: service, account: account)
     }
+    
+    static func deletePassword() throws {
+        try deletePassword(service: service, account: account)
+    }
+    
+    //--------------- general functions ---------------------------------
     
     static func save(password: Data, service: String, account: String) throws {
         
@@ -196,6 +198,21 @@ class KeychainInterface {
         guard status == errSecSuccess else {
             throw KeychainError.unexpectedStatus(status)
         }
+    }
+    
+    enum KeychainError: Error {
+        // Attempted read for an item that does not exist.
+        case itemNotFound
+        
+        // Attempted save to override an existing item.
+        // Use update instead of save to update existing items
+        case duplicateItem
+        
+        // A read of an item in any format other than Data
+        case invalidItemFormat
+        
+        // Any operation result status than errSecSuccess
+        case unexpectedStatus(OSStatus)
     }
     
 }
